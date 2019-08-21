@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
+
+
+
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="21.3dp"
+            android:layout_marginEnd="21.3dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="33.7dp"
+            app:layout_constraintDimensionRatio="H,16:8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="#ffffff"
+            app:cardCornerRadius="13.3dp"
+            app:cardElevation="0dp">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <TextView
+                    android:text="@string/pairing_success_msg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView1"
+                    android:textSize="18sp"
+                    android:fontFamily="Roboto-Bold"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="34.4dp"/>
+
+            <ImageView
+                    android:layout_width="119.7dp"
+                    android:layout_height="223.8dp"
+                    app:srcCompat="@drawable/juxt_watch"
+                    android:id="@+id/imageView1"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/textView1"
+                    android:layout_marginTop="79dp"/>
+
+
+            <TextView
+                    android:text="@string/connected_msg"
+                    android:layout_width="152.7dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView2"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/imageView1"
+                    android:layout_marginTop="44dp"
+                    android:textSize="10sp"
+                    android:fontFamily="Roboto-Regular"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+            />
+
+            <TextView
+                    android:text="@string/connected_info"
+                    android:layout_width="251dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView2"
+                    android:id="@+id/textView3"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="57dp"
+                    android:textSize="10sp"
+                    android:fontFamily="Roboto-Regular"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+
+            />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

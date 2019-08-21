@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">BLE</string>
+    <!-- SplashActivity  -->
+    <string name="splash_text">J U X T</string>
+    <!-- IntroSliderActivity -->
+    <string name="intro_slider1_activity">ACTIVITY</string>
+    <string name="intro_slider1_info">Nulla dignissim dapi bus Leo pretium tristique. Maecenas sapien Lorem ipsum dolor
+        sit amet, consectetur adipiscing elit. Nunc vel odio turpis. Donec sit amet sodales dui. Nunc vel justo in
+        lectus ornare porttitor eu id dui. Ut vel tempus nisi, sed rutrum leo. Ut et laoreet mauris. Praesent sagittis
+        purus non elit sollicitudin malesuada. Ut ornare felis nulla, laoreet viverra arcu ornare ut.
+    </string>
+    <string name="intro_slider1_skip"><![CDATA[SKIP >]]></string>
+    <string name="intro_slider2_notification">NOTIFICATIONS</string>
+    <string name="intro_slider2_info">Nulla dignissim dapi bus Leo pretium tristique. Maecenas sapien Lorem ipsum dolor
+        sit amet, consectetur adipiscing elit. Nunc vel odio turpis. Donec sit amet sodales dui. Nunc vel justo in
+        lectus ornare porttitor eu id dui. Ut vel tempus nisi, sed rutrum leo. Ut et laoreet mauris. Praesent sagittis
+        purus non elit sollicitudin malesuada. Ut ornare felis nulla, laoreet viverra arcu ornare ut.
+    </string>
+    <string name="intro_slider2_skip"><![CDATA[SKIP >]]></string>
+
+    <string name="intro_slider3_dualTime">DUAL TIME</string>
+
+    <!-- OTPVerificationActivity -->
+    <string name="otp_text">OTP VERIFICATION</string>
+    <string name="phone_num_int">+91 xxxxx xxxxx</string>
+    <string name="otp_msg">You will receive a 4 digit OTP number on your mobile phone</string>
+    <string name="otp_ack">By entering the mobile number you agree to accept the</string>
+    <string name="otp_term_text">TERMS &amp; CONDITIONS</string>
+    <string name="otp_incurrect_text">INCORRECT MOBILE NUMBER</string>
+    <string name="otp_receive_msg">You will receive a 4 digit OTP number on your mobile phone</string>
+    <string name="device_search_msg">Searching for your smart device</string>
+    <string name="pairing_success_msg">PAIRING SUCCESSFUL</string>
+    <string name="connected_msg">CONNECTED</string>
+    <string name="connected_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed doeiusmod tempor
+        incididunt
+    </string>
+    <!-- PairingActivity -->
+    <string name="location_permission_disabled">Location Permission Disabled</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- BLEServices -->
+    <string name="service_uuid">F0BA3120-6CAC-4C99-9089-4B0A1DF45002</string>
+    <string name="char_uuid">F0BA3121-6CAC-4C99-9089-4B0A1DF45002</string>
+
+</resources>

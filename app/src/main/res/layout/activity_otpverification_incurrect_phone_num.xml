@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+
+    <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:layout_gravity="center"
+        >
+
+            <androidx.cardview.widget.CardView
+                    android:id="@+id/otp_verify_cardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="21.3dp"
+                    android:layout_marginEnd="21.3dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintDimensionRatio="H,16:8"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:background="#ffffff"
+                    app:cardCornerRadius="13.3dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+
+                    <TextView
+                            android:id="@+id/otp_text"
+                            android:layout_width="180.7dp"
+                            android:layout_height="23.3dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="34.3dp"
+                            android:text="@string/otp_text"
+                            android:textSize="17.7sp"
+                            android:textAlignment="center"
+                            android:fontFamily="Roboto-Bold"
+                            android:textColor="#000000"
+                            android:gravity="center"
+                            android:textStyle="bold"/>
+                    <EditText
+                            android:id="@+id/phone_num"
+                            android:hint="@string/phone_num_int"
+                            android:layout_width="190.7dp"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/otp_text"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="28.7dp"
+                            android:textAlignment="center"
+                            android:textSize="17.7sp"
+                            android:inputType="phone"
+                            android:textColor="#9e9e9e"
+                            android:backgroundTint="#6F9E9E9E"
+                            android:textCursorDrawable="@color/colorPrimary"
+                            android:cursorVisible="false"
+                            android:ems="10"
+                            android:autofillHints="@string/phone_num_int"/>
+
+                    <TextView
+                            android:text="@string/otp_incurrect_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_below="@id/phone_num"
+                            android:textSize="10sp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="20dp"
+                            android:textAlignment="center"
+                            android:id="@+id/otp_incurrect_text"
+                            android:fontFamily="Roboto-Italic"
+                            android:textColor="#ff0000"
+                            android:textStyle="normal"
+                    />
+
+                    <TextView
+                            android:text="@string/otp_msg"
+                            android:layout_width="205.7dp"
+                            android:layout_height="26dp"
+                            android:layout_below="@+id/otp_incurrect_text"
+                            android:layout_centerHorizontal="true"
+                            android:textAlignment="center"
+                            android:layout_marginBottom="29dp"
+                            android:fontFamily="Roboto-Regular"
+                            android:textSize="10sp"
+                            android:id="@+id/otp_msg"
+                            android:textColor="#000000"
+                            android:textStyle="normal"/>
+
+                </RelativeLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
