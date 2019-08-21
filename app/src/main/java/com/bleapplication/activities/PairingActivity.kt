@@ -15,22 +15,17 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.bleapplication.R
-import com.bleapplication.interfaces.OnDeviceConnectedListener
 import com.bleapplication.interfaces.OnDeviceScanListener
 import com.bleapplication.modules.BLEConnectionManager
 import com.bleapplication.modules.BLEConstants
 import com.bleapplication.modules.BLEDeviceManager
 import com.bleapplication.modules.BleDeviceData
 
-class PairingActivity : AppCompatActivity(), OnDeviceScanListener, OnDeviceConnectedListener {
+class PairingActivity : AppCompatActivity(), OnDeviceScanListener {
 
     private var mDeviceAddress: String = ""
     private val TAG = "PairingActivity"
     private val REQUEST_ENABLE_BT = 1000
-
-    override fun OnConnected(isConnected: Boolean) {
-        setContentView(R.layout.device_connected)
-    }
 
     override fun onScanCompleted(deviceDataList: BleDeviceData) {
         //Initiate a dialog Fragment from here and ask the user to select his device

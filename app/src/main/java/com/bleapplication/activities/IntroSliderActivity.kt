@@ -70,7 +70,7 @@ class IntroSliderActivity : AppCompatActivity() {
 
     private fun launchActivity() {
         prefManager!!.setLaunched(false)
-        startActivity(Intent(this, OTPVerificationActivity::class.java))
+        startActivity(Intent(this, PairingActivity::class.java))
         finish()
     }
 

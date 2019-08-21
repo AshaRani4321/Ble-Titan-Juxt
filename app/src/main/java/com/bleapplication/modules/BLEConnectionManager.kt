@@ -5,7 +5,6 @@ import android.content.*
 import android.os.IBinder
 import android.util.Log
 import com.bleapplication.R
-import com.bleapplication.interfaces.OnDeviceConnectedListener
 
 object BLEConnectionManager {
 

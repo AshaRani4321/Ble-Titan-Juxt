@@ -19,10 +19,11 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".activities.OTPVerificationActivity">
+        </activity>
         <activity android:name=".activities.PairingActivity">
         </activity>
-        <activity android:name=".activities.OTPVerificationActivity"
-        >
+        <activity android:name=".activities.PhoneNumberVerificationActivity">
         </activity>
         <activity android:name=".activities.IntroSliderActivity">
         </activity>
@@ -36,8 +37,8 @@
         </activity>
         <activity android:name=".activities.MainActivity">
         </activity>
-        <service android:name=".modules.BLEGattService">
 
+        <service android:name=".modules.BLEGattService">
         </service>
     </application>
 

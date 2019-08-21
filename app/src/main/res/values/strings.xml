@@ -20,7 +20,7 @@
 
     <string name="intro_slider3_dualTime">DUAL TIME</string>
 
-    <!-- OTPVerificationActivity -->
+    <!-- PhoneNumberVerificationActivity -->
     <string name="otp_text">OTP VERIFICATION</string>
     <string name="phone_num_int">+91 xxxxx xxxxx</string>
     <string name="otp_msg">You will receive a 4 digit OTP number on your mobile phone</string>
@@ -42,5 +42,10 @@
     <!-- BLEServices -->
     <string name="service_uuid">F0BA3120-6CAC-4C99-9089-4B0A1DF45002</string>
     <string name="char_uuid">F0BA3121-6CAC-4C99-9089-4B0A1DF45002</string>
+
+    <!-- OTPVerificationActivity -->
+    <string name="otp_info">PLS RE-ENTER THE 4 DIGIT OTP RECEIVED ON YOUR MOBILE FOR FOR VERIFICATION  </string>
+    <string name="otp_resend">RESEND OTP</string>
+
 
 </resources>
