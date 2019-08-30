@@ -14,12 +14,10 @@ import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bleapplication.R
 import com.bleapplication.interfaces.OnDeviceScanListener
-import com.bleapplication.modules.BLEConnectionManager
-import com.bleapplication.modules.BLEConstants
-import com.bleapplication.modules.BLEDeviceManager
-import com.bleapplication.modules.BleDeviceData
+import com.bleapplication.modules.*
 
 class PairingActivity : AppCompatActivity(), OnDeviceScanListener {
 
@@ -31,14 +29,16 @@ class PairingActivity : AppCompatActivity(), OnDeviceScanListener {
         //Initiate a dialog Fragment from here and ask the user to select his device
         // If the application already know the Mac address, we can simply call connect device
         mDeviceAddress = deviceDataList.mDeviceAddress
-        BLEConnectionManager.connect(deviceDataList.mDeviceAddress)
+        if (!BLEConnectionManager.connect(deviceDataList.mDeviceAddress))
+            scanDevice(false)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.device_searching)
-        if (checkLocationPermission())
-            scanDevice(false)
+
+        checkLocationPermission()
+
     }
 
     /**
@@ -82,22 +82,31 @@ class PairingActivity : AppCompatActivity(), OnDeviceScanListener {
             Toast.makeText(this, "BLE NOT SUPPORTED", Toast.LENGTH_SHORT).show()
             return
         }
+
+        //broadCast receiver for GattServices CallBAck
         registerServiceReceiver()
+
+        //Bluetooth device scan callBack
         BLEDeviceManager.setListener(this)
 
+        BLEConnectionManager.initBLEService(this@PairingActivity)
+
+        //Enable Bluetooth Manually
         if (!BLEDeviceManager.isEnabled()) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+        } else {
+            scanDevice(true)
         }
 
-        BLEConnectionManager.initBLEService(this@PairingActivity)
     }
 
     /**
      * Register GATT update receiver
      */
     private fun registerServiceReceiver() {
-        this.registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter())
+        val manager = LocalBroadcastManager.getInstance(this)
+        manager.registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter())
     }
 
 
@@ -120,15 +129,12 @@ class PairingActivity : AppCompatActivity(), OnDeviceScanListener {
         Handler().postDelayed({
             BLEConnectionManager.initBLEService(this@PairingActivity)
             if (BLEConnectionManager.connect(mDeviceAddress)) {
-                setContentView(R.layout.device_connected)
-
                 Toast.makeText(this@PairingActivity, "DEVICE CONNECTED", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this@PairingActivity, "DEVICE CONNECTION FAILED", Toast.LENGTH_SHORT).show()
             }
         }, 100)
     }
-
 
     private val mGattUpdateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -137,46 +143,56 @@ class PairingActivity : AppCompatActivity(), OnDeviceScanListener {
             when {
                 BLEConstants.ACTION_GATT_CONNECTED.equals(action) -> {
                     Log.i(TAG, "ACTION_GATT_CONNECTED ")
-                    BLEConnectionManager.findBLEGattService(this@PairingActivity)
+                   // BLEConnectionManager.findBLEGattService(this@PairingActivity)
                 }
-                BLEConstants.ACTION_GATT_DISCONNECTED.equals(action) -> {
-                    Log.i(TAG, "ACTION_GATT_DISCONNECTED ")
+                BLEConstants.ACTION_GATT_DEVICE_CONNECTED.equals(action) -> {
+                    Log.i(TAG, "ACTION_GATT_DEVICE_CONNECTED ")
+                    val data = intent.getBooleanExtra("deviceConnected", false)
+                    if (data) {
+                        try {
+                            setContentView(R.layout.device_connected)
+                            Thread.sleep(1000)
+                        } catch (e: InterruptedException) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+
+                BLEConstants.ACTION_GATT_DEVICE_DISCONNECTED.equals(action) -> {
+                    Log.i(TAG, "ACTION_GATT_DEVICE_DISCONNECTED ")
+                    val data = intent.getBooleanExtra("deviceConnected", false)
                 }
                 BLEConstants.ACTION_GATT_SERVICES_DISCOVERED.equals(action) -> {
                     Log.i(TAG, "ACTION_GATT_SERVICES_DISCOVERED1 ")
-                    try {
-                        Thread.sleep(500)
-                    } catch (e: InterruptedException) {
-                        e.printStackTrace()
-                    }
-
                     BLEConnectionManager.findBLEGattService(this@PairingActivity)
                 }
 
-//                BLEConstants.ACTION_DEVICE_CONNECTED.equals(action) -> {
-//                    Log.i(TAG, "DEVICE_CONNECTED_SUCCESSFULLY ")
-//                    setContentView(R.layout.device_connected)
-//                }
                 BLEConstants.ACTION_DATA_AVAILABLE.equals(action) -> {
-                    val data = intent.getStringExtra(BLEConstants.EXTRA_DATA)
+                    val data = intent.getByteArrayExtra("byteArray")
                     Log.i(TAG, "ACTION_DATA_AVAILABLE $data")
 
-                    if (data == "-128 2 5") {
-                        setContentView(R.layout.device_connected)
+                    if (data != null) {
+                        if (BLESystemConfigCommand.verifySetAcknowledgement(BLEConstants().byteArrayToArraylist(data))) {
+                            BLEConnectionManager.writeToConnectedDevice(
+                                BLESystemConfigCommand.read(BLEConfigurationID.enabled)
+                            )
+                        } else if (BLESystemConfigCommand.verifyReadAcknowledgement(
+                                BLEConstants().byteArrayToArraylist(
+                                    data
+                                )
+                            )
+                        ) {
+                            launchHomeScreen()
+                        } else {
+                            BLEConnectionManager.writeToConnectedDevice(
+                                BLESystemConfigCommand.set(BLEConfigurationID.enabled, basicDescription.enable.value)
+                            )
+                        }
                     }
-                    val returnValue = byteArrayOf(0x80.toByte(), 0x0f, 0x04, 0x01, 0x01)
-                    BLEConnectionManager.writeToConnectedDevice(returnValue)
-                }
-                BLEConstants.ACTION_DATA_WRITTEN.equals(action) -> {
-                    val data = intent.getStringExtra(BLEConstants.EXTRA_DATA)
-                    if (data == "-128 15")
-                        launchHomeScreen()
-                        Log.i(TAG, "ACTION_DATA_WRITTEN ")
                 }
             }
         }
     }
-
 
     /**
      * Intent filter for Handling BLEGattService broadcast.
@@ -184,26 +200,27 @@ class PairingActivity : AppCompatActivity(), OnDeviceScanListener {
     private fun makeGattUpdateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BLEConstants.ACTION_GATT_CONNECTED)
-        intentFilter.addAction(BLEConstants.ACTION_GATT_DISCONNECTED)
+        intentFilter.addAction(BLEConstants.ACTION_GATT_DEVICE_DISCONNECTED)
         intentFilter.addAction(BLEConstants.ACTION_GATT_SERVICES_DISCOVERED)
         intentFilter.addAction(BLEConstants.ACTION_DATA_AVAILABLE)
         intentFilter.addAction(BLEConstants.ACTION_DATA_WRITTEN)
+        intentFilter.addAction(BLEConstants.ACTION_GATT_DEVICE_CONNECTED)
 
         return intentFilter
     }
 
     private fun launchHomeScreen() {
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, CalibrateHourHandActivity::class.java))
         finish()
     }
-
 
     /**
      * Unregister GATT update receiver
      */
     private fun unRegisterServiceReceiver() {
         try {
-            this.unregisterReceiver(mGattUpdateReceiver)
+            val manager = LocalBroadcastManager.getInstance(this)
+            manager.unregisterReceiver(mGattUpdateReceiver)
         } catch (e: Exception) {
             //May get an exception while user denies the permission and user exists the app
             Log.e(TAG, e.message)
@@ -213,7 +230,6 @@ class PairingActivity : AppCompatActivity(), OnDeviceScanListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        BLEConnectionManager.disconnect()
         unRegisterServiceReceiver()
     }
 }

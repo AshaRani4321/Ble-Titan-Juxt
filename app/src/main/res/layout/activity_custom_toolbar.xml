@@ -22,8 +22,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="?attr/actionModeCloseDrawable"
-                    android:background="@color/colorPrimary"
-                    android:id="@+id/imageButton"/>
+                    android:background="@null"
+                    android:id="@+id/back_btn"/>
 
             <TextView
                     android:text="@string/splash_text"

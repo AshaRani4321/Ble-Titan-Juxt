@@ -38,4 +38,14 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    //OTP PinView
+    implementation 'com.chaos.view:pinview:1.4.3'
+
+    //Anko with Kotlin for toast fun
+    implementation "org.jetbrains.anko:anko-common:0.8.3"
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
 }

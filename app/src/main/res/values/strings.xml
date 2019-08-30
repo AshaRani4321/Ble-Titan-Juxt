@@ -44,8 +44,49 @@
     <string name="char_uuid">F0BA3121-6CAC-4C99-9089-4B0A1DF45002</string>
 
     <!-- OTPVerificationActivity -->
-    <string name="otp_info">PLS RE-ENTER THE 4 DIGIT OTP RECEIVED ON YOUR MOBILE FOR FOR VERIFICATION  </string>
+    <string name="otp_info">PLS RE-ENTER THE 4 DIGIT OTP RECEIVED ON YOUR MOBILE FOR FOR VERIFICATION</string>
     <string name="otp_resend">RESEND OTP</string>
+    <string name="otp_incorrect_msg">INCORRECT OTP</string>
 
+
+    <!-- PermissionAccessActivity -->
+    <string name="permission_text">PERMISSION &amp; ACCESS</string>
+    <string name="permission_granted">BY GRANTING ACCESS YOU ALLOW THE WATCH &amp; APP TO ACCESS YOUR PHONE</string>
+    <string name="permission_button_text">Accept</string>
+    <string name="permission_contact_text">Permission is required to show the contact name on the watch.</string>
+
+    <!-- CalibrateHourHandActivity -->
+    <string name="calibarte_text">CALIBRATE HANDS</string>
+    <string name="calibrate_info">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed doeiusmod tempor
+        incididunt
+    </string>
+    <string name="calibrate_next">NEXT ></string>
+    <string name="calibrate_hour_hand">HOUR HAND</string>
+    <string name="calibrate_minute_hand">MINUTE HAND</string>
+
+    <!-- SetTimeZoneActivity -->
+    <string name="time_zone_text">TIME ZONE</string>
+    <string name="current_time_zone">Kolkata 00:00 (GMT +05:30)</string>
+    <string name="current_time_zone_info">The watch will show your current location time &amp; weather</string>
+    <string name="set_home_time">Would you like to set this as your HOME TIME ?</string>
+    <string name="set_home_time_info">you can always modify this in clock heading under menu</string>
+    <string name="set_btn">SET</string>
+    <string name="next_btn">SKIP ></string>
+    <string name="calibration_done_btn">DONE ></string>
+    <string name="home_time_text">HOME TIME</string>
+    <string name="home_time_set_text">HAS BEEN SET AS YOUR HOME TIME</string>
+    <string name="home_time_success">Home time successfully set</string>
+
+
+    <!-- StepGoalFragment -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="steps">Steps</string>
+    <string name="step_info">DAILY STEP GOAL</string>
+
+    <!-- NameFragment -->
+    <string name="name_info">NAME</string>
+
+    <!-- GenderFragment -->
+    <string name="gender_info">GENDER</string>
 
 </resources>

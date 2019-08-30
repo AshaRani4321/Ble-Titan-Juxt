@@ -49,7 +49,7 @@ class IntroSliderActivity : AppCompatActivity() {
 
         // get reference to textview
         val btn_skip = findViewById(R.id.btn_skip) as TextView
-        btn_skip!!.setOnClickListener { launchActivity() }
+        btn_skip.setOnClickListener { launchActivity() }
     }
 
     private fun addBottomDots(currentPage: Int) {
@@ -70,7 +70,7 @@ class IntroSliderActivity : AppCompatActivity() {
 
     private fun launchActivity() {
         prefManager!!.setLaunched(false)
-        startActivity(Intent(this, PairingActivity::class.java))
+        startActivity(Intent(this, PhoneNumberVerificationActivity::class.java))
         finish()
     }
 

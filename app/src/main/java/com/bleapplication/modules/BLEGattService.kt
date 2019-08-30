@@ -8,6 +8,9 @@ import android.os.Binder
 import android.os.IBinder
 import android.util.Log
 import java.util.*
+import android.os.Bundle
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+
 
 class BLEGattService : Service() {
 
@@ -49,15 +52,6 @@ class BLEGattService : Service() {
         return true                                                                    //Success, we have a BluetoothAdapter to control the radio
     }
 
-    // An activity has unbound from this service
-    override fun onUnbind(intent: Intent): Boolean {
-        if (mBluetoothGatt != null) {       //Check for existing BluetoothGatt connection
-            mBluetoothGatt!!.close()        //Close BluetoothGatt coonection for proper cleanup
-            mBluetoothGatt = null           //No longer have a BluetoothGatt connection
-        }
-        return super.onUnbind(intent)
-    }
-
     // A Binder to return to an activity to let it bind to this service
     inner class LocalBinder : Binder() {
         internal fun getService(): BLEGattService {
@@ -68,16 +62,19 @@ class BLEGattService : Service() {
     fun connect(address: String?): Boolean {
         try {
 
-            if (mBluetoothAdapter == null || address == null) {                             //Check that we have a Bluetooth adappter and device address
+            if (mBluetoothAdapter == null || address == null) {
+                //Check that we have a Bluetooth adappter and device address
                 Log.i(
                     TAG,
                     "BluetoothAdapter not initialized or unspecified address."
                 ) //Log a warning that something went wrong
-                return false                                                                //Failed to connect
+                return false
+                //Failed to connect
             }
 
             // Previously connected device.  Try to reconnect.
-            if (mBluetoothDeviceAddress != null && address == mBluetoothDeviceAddress && mBluetoothGatt != null) { //See if there was previous connection to the device
+            if (mBluetoothDeviceAddress != null && address == mBluetoothDeviceAddress && mBluetoothGatt != null) {
+                //See if there was previous connection to the device
                 Log.i(TAG, "Trying to use an existing mBluetoothGatt for connection.")
                 //See if we can connect with the existing BluetoothGatt to connect
                 //Success
@@ -97,7 +94,8 @@ class BLEGattService : Service() {
                 mGattCallback
             )                //Directly connect to the device so autoConnect is false
             mBluetoothDeviceAddress =
-                address                                              //Record the address in case we need to reconnect with the existing BluetoothGatt
+                address
+            //Record the address in case we need to reconnect with the existing BluetoothGatt
             return true
 
         } catch (e: Exception) {
@@ -115,37 +113,31 @@ class BLEGattService : Service() {
             gatt: BluetoothGatt, status: Int, newState: Int
         ) {
             //Change in connection state
-            if (newState == BluetoothProfile.STATE_CONNECTED) {             //See if we are connected
+            if (newState == BluetoothProfile.STATE_CONNECTED) {
+                //See if we are connected
                 Log.i(TAG, "**ACTION_SERVICE_CONNECTED**$status")
-                broadcastUpdate(BLEConstants.ACTION_GATT_CONNECTED)         //Go broadcast an intent to say we are connected
-                gatt.discoverServices()
-                mBluetoothGatt?.discoverServices()                          //Discover services on connected BLE device
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {   //See if we are not connectedLog.i(TAG, "**ACTION_SERVICE_DISCONNECTED**" + status);
-                broadcastUpdate(BLEConstants.ACTION_GATT_DISCONNECTED)      //Go broadcast an intent to say we are disconnected
-            }
-        }
-
-        override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {           //BLE service discovery complete
-            if (status == BluetoothGatt.GATT_SUCCESS) {                                 //See if the service discovery was successful
-                Log.i(TAG, "**ACTION_SERVICE_DISCOVERED**$status")
-                broadcastUpdate(BLEConstants.ACTION_GATT_SERVICES_DISCOVERED)           //Go broadcast an intent to say we have discovered services
-            } else {                                                                     //Service discovery failed so log a warning
-                Log.i(TAG, "onServicesDiscovered received: $status")
-            }
-        }
-
-        //For information only. This application sends small packets infrequently and does not need to know what the previous write completed
-        override fun onCharacteristicWrite(
-            gatt: BluetoothGatt,
-            characteristic: BluetoothGattCharacteristic,
-            status: Int
-        ) { //A request to Write has completed
-            if (status == BluetoothGatt.GATT_SUCCESS) {                                 //See if the write was successful
-                Log.e(TAG, "**ACTION_DATA_WRITTEN**$characteristic")
+               // broadcastUpdate(BLEConstants.ACTION_GATT_CONNECTED)
+                //Go broadcast an intent to say we are connected
+                 gatt.discoverServices()
+                //mBluetoothGatt?.discoverServices()
+                //Discover services on connected BLE device
+            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                //See if we are not connectedLog.i(TAG, "**ACTION_SERVICE_DISCONNECTED**" + status);
                 broadcastUpdate(
-                    BLEConstants.ACTION_DATA_WRITTEN,
-                    characteristic
-                )        //Go broadcast an intent to say we have have written data
+                    BLEConstants.ACTION_GATT_DEVICE_DISCONNECTED, false
+                )//Go broadcast an intent to say we are disconnected
+            }
+        }
+
+        override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {//BLE service discovery complete
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                //See if the service discovery was successful
+                Log.i(TAG, "**ACTION_SERVICE_DISCOVERED**$status")
+                broadcastUpdate(BLEConstants.ACTION_GATT_SERVICES_DISCOVERED)
+                //Go broadcast an intent to say we have discovered services
+            } else {
+                //Service discovery failed so log a warning
+                Log.i(TAG, "onServicesDiscovered received: $status")
             }
         }
 
@@ -157,8 +149,15 @@ class BLEGattService : Service() {
                 broadcastUpdate(
                     BLEConstants.ACTION_DATA_AVAILABLE,
                     characteristic
-                ) //Go broadcast an intent with the characteristic data
+                )//Go broadcast an intent with the characteristic data
             }
+        }
+
+        override fun onDescriptorWrite(gatt: BluetoothGatt?, descriptor: BluetoothGattDescriptor?, status: Int) {
+            broadcastUpdate(
+                BLEConstants.ACTION_GATT_DEVICE_CONNECTED,
+                true
+            )//Go broadcast an intent to say we are disconnected
         }
 
     }
@@ -166,29 +165,35 @@ class BLEGattService : Service() {
 
     // Broadcast an intent with a string representing an action
     private fun broadcastUpdate(action: String) {
-        val intent = Intent(action)                                       //Create new intent to broadcast the action
-        sendBroadcast(intent)                                             //Broadcast the intent
+
+        val intent = Intent(action)
+        val manager = LocalBroadcastManager.getInstance(applicationContext)
+        manager.sendBroadcast(intent)                                             //Broadcast the intent
     }
+
+    // Broadcast an intent with a string representing an action
+    private fun broadcastUpdate(action: String, dCon: Boolean) {
+        val intent = Intent(action)
+        val manager = LocalBroadcastManager.getInstance(applicationContext)
+        intent.putExtra("deviceConnected", dCon)
+        manager.sendBroadcast(intent)                                         //Broadcast the intent
+    }
+
 
     // Broadcast an intent with a string representing an action an extra string with the data
     // Modify this code for data that is not in a string format
     private fun broadcastUpdate(action: String, characteristic: BluetoothGattCharacteristic) {
         //Create new intent to broadcast the action
         val intent = Intent(action)
-        var dataValueHex = ""
-        var dataValueNew = ""
+        val manager = LocalBroadcastManager.getInstance(applicationContext)
 
         val value = characteristic.value
+
         if (value != null) {
-            for (singleData in value) {
-                dataValueHex = dataValueHex + "\t" + "0x" + String.format(Locale.ENGLISH, "%02X", singleData)
-                dataValueHex = dataValueHex.replace(",", ".")
-                dataValueNew = "$dataValueNew $singleData"
-            }
-            Log.i(TAG, "MESSAGE Response Array Normal===> " + dataValueNew + " UUID " + characteristic.uuid)
-            intent.putExtra(BLEConstants.EXTRA_DATA, dataValueNew)
-            intent.putExtra(BLEConstants.EXTRA_UUID, characteristic.uuid)
-            sendBroadcast(intent)
+            val extras = Bundle()
+            extras.putByteArray("byteArray", value)
+            intent.putExtras(extras)
+            manager.sendBroadcast(intent)
         }
     }
 
@@ -196,7 +201,6 @@ class BLEGattService : Service() {
     // For information only. This application uses Indication, not Notification
     fun setCharacteristicNotification(characteristic: BluetoothGattCharacteristic, enabled: Boolean) {
         try {
-
             if (mBluetoothAdapter == null || mBluetoothGatt == null) {                      //Check that we have a GATT connection
                 Log.i(TAG, "BluetoothAdapter not initialized")
 
@@ -215,7 +219,6 @@ class BLEGattService : Service() {
                     mBluetoothGatt!!.writeDescriptor(des)
 
                 }
-
             }
 
         } catch (e: Exception) {
@@ -255,14 +258,17 @@ class BLEGattService : Service() {
     fun writeCharacteristic(characteristic: BluetoothGattCharacteristic) {
         try {
 
-            if (mBluetoothAdapter == null || mBluetoothGatt == null) {                      //Check that we have access to a Bluetooth radio
+            if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+                //Check that we have access to a Bluetooth radio
 
                 return
             }
             val test =
-                characteristic.properties                                      //Get the properties of the characteristic
+                characteristic.properties
+            //Get the properties of the characteristic
 
-            if (test and BluetoothGattCharacteristic.PROPERTY_WRITE == 0 && test and BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE == 0) { //Check that the property is writable
+            if (test and BluetoothGattCharacteristic.PROPERTY_WRITE == 0 && test and BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE == 0) {
+                //Check that the property is writable
 
                 return
             }
@@ -294,18 +300,4 @@ class BLEGattService : Service() {
         } else mBluetoothGatt!!.services
 
     }
-
-    // Disconnects an existing connection or cancel a pending connection
-    // BluetoothGattCallback.onConnectionStateChange() will get the result
-    fun disconnect() {
-
-        if (mBluetoothAdapter == null || mBluetoothGatt == null) {      //Check that we have a GATT connection to disconnect
-
-            return
-        }
-
-        mBluetoothGatt?.disconnect()                                                    //Disconnect GATT connection
-    }
-
-
 }

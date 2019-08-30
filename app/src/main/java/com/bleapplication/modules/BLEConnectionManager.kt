@@ -5,6 +5,8 @@ import android.content.*
 import android.os.IBinder
 import android.util.Log
 import com.bleapplication.R
+import com.bleapplication.activities.DeviceConnectionActivity
+import com.bleapplication.interfaces.OnGattServiceCallbackListener
 
 object BLEConnectionManager {
 
@@ -12,6 +14,12 @@ object BLEConnectionManager {
     private var mBLEGattService: BLEGattService? = null
     private var isBind = false
     private var mDataBLE: BluetoothGattCharacteristic? = null
+
+
+
+    private var mContext: DeviceConnectionActivity? = null
+    private var mListener: OnGattServiceCallbackListener? = null
+    private var mDeviceAddress: String? = null
 
     /**
      * Initialize Bluetooth service.
@@ -22,16 +30,14 @@ object BLEConnectionManager {
             if (mBLEGattService == null) {
                 val gattServiceIntent = Intent(context, BLEGattService::class.java)
 
-                if (context != null) {
-                    isBind = context.bindService(
-                        gattServiceIntent, mServiceConnection,
-                        Context.BIND_AUTO_CREATE
-                    )
-                }
+                isBind = context.bindService(
+                    gattServiceIntent, mServiceConnection,
+                    Context.BIND_AUTO_CREATE
+                )
             }
 
         } catch (e: Exception) {
-            Log.e(TAG, e.message)
+            Log.e(TAG, "initBLEService"+e.message)
         }
 
     }
@@ -49,30 +55,6 @@ object BLEConnectionManager {
         override fun onServiceDisconnected(componentName: ComponentName) {
             mBLEGattService = null
         }
-    }
-
-    /**
-     * Unbind BLE Service
-     */
-    fun unBindBLEService(context: Context) {
-
-        if (mServiceConnection != null && isBind) {
-            context.unbindService(mServiceConnection)
-        }
-
-        mBLEGattService = null
-    }
-
-
-    /**
-     * Disconnect
-     */
-    fun disconnect() {
-        if (null != mBLEGattService) {
-            mBLEGattService!!.disconnect()
-            mBLEGattService = null
-        }
-
     }
 
     /**
@@ -161,14 +143,6 @@ object BLEConnectionManager {
         return gattCharacteristic
     }
 
-
-    fun writeToConnectedDevice(value: ByteArray) {
-        if (mDataBLE != null) {
-            mDataBLE!!.value = value
-            writeBLECharacteristic(mDataBLE)
-        }
-    }
-
     /**
      * Write BLE Characteristic.
      */
@@ -180,4 +154,43 @@ object BLEConnectionManager {
         }
     }
 
+    fun writeToConnectedDevice(data: ArrayList<Byte>) {
+        var byteArray = data
+        val bleChunkLength = 20
+        var numberOfCommands: Int = byteArray.size / (bleChunkLength - 1)
+        if (byteArray.size % (bleChunkLength - 1) > 0 ) {
+            numberOfCommands += 1
+        }
+
+        for (i in 0..(numberOfCommands - 1)) {
+            byteArray.add((i * bleChunkLength), i.toByte())
+            if (i == numberOfCommands - 1) {
+                byteArray[i * bleChunkLength] = (byteArray[i * bleChunkLength].toInt() or BLECommands.SEQBit.value.toInt()).toByte()
+            }
+        }
+
+        if (byteArray.size <= bleChunkLength) {
+            if (mDataBLE != null) {
+                mDataBLE!!.value = byteArray.toByteArray()
+                writeBLECharacteristic(mDataBLE)
+            }
+            // write "byteArray" to gattClient Connected Device / Characteristic
+        } else {
+            for (i in 0..(numberOfCommands - 1)) {
+                val startingIndex = (i * bleChunkLength)
+                var endingIndex = ((i + 1) * bleChunkLength) - 1
+                if (endingIndex >= byteArray.size) {
+                    endingIndex = startingIndex + (byteArray.size % bleChunkLength) - 1
+                }
+
+                val commandByteArray = byteArray.subList(startingIndex, endingIndex)
+                if (mDataBLE != null) {
+                    mDataBLE!!.value = commandByteArray.toByteArray()
+                    writeBLECharacteristic(mDataBLE)
+                }
+                // write "commandByteArray" to gattClient Connected Device / Characteristic
+
+            }
+        }
+    }
 }

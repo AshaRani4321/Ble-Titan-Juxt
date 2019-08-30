@@ -5,4 +5,7 @@
     <color name="colorAccent">#000000</color>
 
     <color name="inactive_dot_color">#c3c3c3</color>
+    <color name="red">#ff0000</color>
+
+
 </resources>
