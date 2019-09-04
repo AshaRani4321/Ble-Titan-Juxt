@@ -82,11 +82,21 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="steps">Steps</string>
     <string name="step_info">DAILY STEP GOAL</string>
+    <string name="number_picker_formatter">%02d</string>
 
     <!-- NameFragment -->
     <string name="name_info">NAME</string>
 
     <!-- GenderFragment -->
     <string name="gender_info">GENDER</string>
+
+    <!-- HeightFragment -->
+    <string name="height_info">HEIGHT</string>
+
+    <!-- WeightFragment -->
+    <string name="weight_info">WEIGHT</string>
+
+    <!-- BirthDayFragment -->
+    <string name="birthday_info">BIRTHDAY</string>
 
 </resources>

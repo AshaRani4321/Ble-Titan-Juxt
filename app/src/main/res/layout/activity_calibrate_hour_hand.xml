@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
+
+    <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="21.3dp"
+            android:layout_marginEnd="21.3dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="33.7dp"
+            app:layout_constraintDimensionRatio="H,16:8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="#ffffff"
+            app:cardCornerRadius="13.3dp"
+            app:cardElevation="0dp">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+        >
+
+            <TextView
+                    android:text="@string/calibarte_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView1"
+                    android:textSize="18sp"
+                    android:textAlignment="center"
+                    android:fontFamily="Roboto-Bold"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="34.4dp"/>
+            <TextView
+                    android:text="@string/calibrate_info"
+                    android:layout_width="251dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView1"
+                    android:id="@+id/textView2"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="13dp"
+                    android:textSize="10sp"
+                    android:fontFamily="Roboto-Regular"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textStyle="normal"
+
+            />
+
+            <ImageView
+                    android:layout_width="170dp"
+                    android:layout_height="170dp"
+                    app:srcCompat="@drawable/calibrate"
+                    android:id="@+id/imageView1"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/textView2"
+                    android:layout_marginTop="55dp"/>
+
+            <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/imageView1"
+                    android:layout_alignRight="@+id/imageView1"
+                    android:text="@string/calibrate_hour_hand"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textAlignment="center"
+                    android:fontFamily="Roboto-Regular"
+                    android:textStyle="normal"
+                    android:gravity="center"
+                    android:textSize="10sp"
+                    android:textColor="#000000"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="-4dp"
+                    android:layout_marginBottom="44dp"
+                    android:layout_alignBottom="@+id/imageView1"/>
+
+
+            <LinearLayout
+                    android:id="@+id/linear_layout_button"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageView1"
+                    android:layout_marginTop="86dp"
+                    android:layout_marginBottom="61dp"
+                    android:layout_marginEnd="65dp"
+                    android:layout_marginStart="89dp">
+
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/calibrate_reverse"
+                        android:id="@+id/imageButton2"
+                        android:layout_marginEnd="90dp"
+                        android:background="@null"
+                        android:tag="hour_reverse"
+                />
+
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/calibrate_advance"
+                        android:id="@+id/imageButton3"
+                        android:background="@null"
+                        android:tag="hour_advance"
+
+                />
+
+            </LinearLayout>
+
+
+            <TextView
+                    android:text="@string/calibrate_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/linear_layout_button"
+                    android:id="@+id/textView3"
+                    android:textSize="13sp"
+                    android:fontFamily="Roboto-Bold"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="23dp"/>
+
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

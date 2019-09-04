@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_height="match_parent"
+              android:layout_width="match_parent"
+              android:orientation="vertical"
+              android:paddingLeft="90dp">
+
+
+    <TextView
+            android:text="@string/permission_contact_text"
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView8"
+            android:textColor="#c3c3c3"
+            android:fontFamily="Helvetica"
+            android:textSize="11sp"
+    />
+</LinearLayout>

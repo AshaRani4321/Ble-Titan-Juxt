@@ -38,7 +38,6 @@ class SplashActivity : AppCompatActivity() {
                 // close this activity
                 finish()
             }, SPLASH_TIME_OUT)}
-
     }
 
     // Receive the permissions request result
